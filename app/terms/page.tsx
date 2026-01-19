@@ -29,7 +29,7 @@ export default function TermsPage() {
       <Header />
       <main className="flex-1">
         <div className="container py-12 mx-auto">
-        <div className="max-w-4xl mx-auto prose prose-sm max-w-none dark:prose-invert">
+          <div className="max-w-4xl mx-auto prose prose-sm max-w-none dark:prose-invert">
           <h1>Terms of Service</h1>
           <p className="text-muted-foreground">Last updated: January 2026</p>
 
@@ -190,6 +190,7 @@ export default function TermsPage() {
               </a>
             </p>
           </section>
+          </div>
         </div>
       </main>
       <Footer />

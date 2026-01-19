@@ -32,8 +32,8 @@ export default function AboutPage() {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1">
-      <div className="container py-12 mx-auto">
-        <div className="max-w-4xl mx-auto">
+        <div className="container py-12 mx-auto">
+          <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-4">About Us</h1>
             <p className="text-lg text-muted-foreground">
@@ -132,6 +132,7 @@ export default function AboutPage() {
               foundation, and we work tirelessly to maintain the highest standards of security and privacy.
             </p>
           </Card>
+          </div>
         </div>
       </main>
       <Footer />

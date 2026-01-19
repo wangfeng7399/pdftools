@@ -47,7 +47,7 @@ export default function ContactPage() {
       <Header />
       <main className="flex-1">
         <div className="container py-12 mx-auto">
-        <div className="max-w-3xl mx-auto">
+          <div className="max-w-3xl mx-auto">
           <div className="text-center mb-12">
             <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
             <p className="text-lg text-muted-foreground">
@@ -151,6 +151,7 @@ export default function ContactPage() {
                 </Button>
               </form>
             </Card>
+          </div>
           </div>
         </div>
       </main>
