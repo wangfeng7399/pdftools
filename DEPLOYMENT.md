@@ -61,168 +61,67 @@
 
 ## 环境变量配置
 
-### 🔴 必需环境变量
+### ✅ 已配置的变量（直接复制）
 
-以下环境变量是应用运行所必需的，必须全部配置：
+以下变量在本地 `.env.local` 文件中已配置完成，部署到 Vercel 时直接从 `.env.local` 文件复制对应的值即可：
 
-#### 1. 数据库配置
+- `DATABASE_URL` - Prisma Data Platform 数据库连接（已配置）
+- `POSTGRES_URL` - PostgreSQL 连接字符串（已配置）
+- `PRISMA_DATABASE_URL` - Prisma Accelerate 连接字符串（已配置）
+- `NEXT_PUBLIC_SUPABASE_URL` - Supabase 项目 URL（已配置）
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase 匿名密钥（已配置）
+- `SUPABASE_SERVICE_ROLE_KEY` - Supabase 服务角色密钥（已配置）
+- `GOOGLE_CLIENT_ID` - Google OAuth Client ID（已配置）
+- `GOOGLE_CLIENT_SECRET` - Google OAuth Client Secret（已配置）
+- `GITHUB_CLIENT_ID` - GitHub OAuth Client ID（已配置）
+- `GITHUB_CLIENT_SECRET` - GitHub OAuth Client Secret（已配置）
+- `OPENROUTER_API_KEY` - OpenRouter API 密钥（已配置）
+- `AUTH_SECRET` - 认证密钥（已配置）
+- `NEXTAUTH_URL` - NextAuth URL（已配置）
+
+**操作步骤**：在 Vercel Dashboard → Settings → Environment Variables 中，将上述变量名和对应的值从 `.env.local` 文件复制粘贴即可。**无需在此文档中重复说明，直接复制 `.env.local` 中的值。**
+
+### ⚠️ 需要配置的变量
+
+以下变量在 `.env.local` 中未配置，需要在 Vercel 中手动添加：
+
+#### 必需变量
+
+**`NEXT_PUBLIC_SITE_URL`** - 生产环境域名
 
 ```bash
-DATABASE_URL="postgresql://user:password@host:5432/dbname?schema=public"
+NEXT_PUBLIC_SITE_URL="https://pdftools.club"
 ```
 
 **说明**：
-- 生产环境必须使用 PostgreSQL（不能使用 SQLite）
-- 推荐使用：
-  - **Vercel Postgres**：在 Vercel Dashboard 中创建
-  - **Supabase Postgres**：在 Supabase Dashboard 中创建
-  - **其他 PostgreSQL 服务**：如 Neon, Railway, Render 等
-
-**获取方式**：
-- Vercel Postgres：在 Vercel Dashboard → Storage → Create Database → Postgres
-- Supabase：在 Supabase Dashboard → Project Settings → Database → Connection String
-
----
-
-#### 2. Supabase 配置
-
-```bash
-NEXT_PUBLIC_SUPABASE_URL="https://your-project.supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="your-anon-key"
-SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
-```
-
-**说明**：
-- `NEXT_PUBLIC_SUPABASE_URL`：Supabase 项目 URL（公开）
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY`：Supabase 匿名密钥（公开，用于客户端）
-- `SUPABASE_SERVICE_ROLE_KEY`：Supabase 服务角色密钥（私有，用于服务器端）
-
-**获取方式**：
-1. 登录 [Supabase Dashboard](https://app.supabase.com)
-2. 选择或创建项目
-3. 进入 **Settings → API**
-4. 复制：
-   - **Project URL** → `NEXT_PUBLIC_SUPABASE_URL`
-   - **anon public** → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - **service_role secret** → `SUPABASE_SERVICE_ROLE_KEY`
-
----
-
-#### 3. OAuth 配置
-
-##### Google OAuth
-
-```bash
-GOOGLE_CLIENT_ID="your-google-client-id"
-GOOGLE_CLIENT_SECRET="your-google-client-secret"
-```
-
-**配置步骤**：
-1. 访问 [Google Cloud Console](https://console.cloud.google.com)
-2. 创建新项目或选择现有项目
-3. 启用 **Google+ API**
-4. 进入 **Credentials → Create Credentials → OAuth 2.0 Client ID**
-5. 应用类型选择 **Web application**
-6. 添加授权重定向 URI：
-   ```
-   https://your-domain.vercel.app/auth/callback
-   http://localhost:3000/auth/callback  (开发环境)
-   ```
-7. 复制 **Client ID** 和 **Client Secret**
-
-**在 Supabase 中配置**：
-1. 进入 Supabase Dashboard → Authentication → Providers
-2. 启用 **Google** 提供商
-3. 填入 `GOOGLE_CLIENT_ID` 和 `GOOGLE_CLIENT_SECRET`
-4. 保存
-
-##### GitHub OAuth
-
-```bash
-GITHUB_CLIENT_ID="your-github-client-id"
-GITHUB_CLIENT_SECRET="your-github-client-secret"
-```
-
-**配置步骤**：
-1. 访问 [GitHub Developer Settings](https://github.com/settings/developers)
-2. 点击 **New OAuth App**
-3. 填写：
-   - **Application name**: PDF Summarizer
-   - **Homepage URL**: `https://your-domain.vercel.app`
-   - **Authorization callback URL**: `https://your-domain.vercel.app/auth/callback`
-4. 复制 **Client ID** 和 **Client Secret**
-
-**在 Supabase 中配置**：
-1. 进入 Supabase Dashboard → Authentication → Providers
-2. 启用 **GitHub** 提供商
-3. 填入 `GITHUB_CLIENT_ID` 和 `GITHUB_CLIENT_SECRET`
-4. 保存
-
----
-
-#### 4. AI API 配置
-
-```bash
-OPENROUTER_API_KEY="sk-or-v1-your-api-key"
-```
-
-**说明**：
-- 使用 OpenRouter 作为 AI 服务提供商
-- 支持多种 AI 模型（GPT-4, Claude, 等）
-
-**获取方式**：
-1. 访问 [OpenRouter](https://openrouter.ai)
-2. 注册账号并登录
-3. 进入 **Keys** 页面
-4. 创建新的 API Key
-5. 复制 API Key
-
-**可选**：如果使用 OpenAI 直接 API：
-
-```bash
-OPENAI_API_KEY="sk-your-openai-key"  # 替代 OPENROUTER_API_KEY
-```
-
----
-
-#### 5. 站点配置
-
-```bash
-NEXT_PUBLIC_SITE_URL="https://your-domain.vercel.app"
-```
-
-**说明**：
-- 你的生产环境域名
+- 生产环境域名：`https://pdftools.club`
 - 用于生成绝对 URL（OAuth 回调、API 调用等）
-- 示例：`https://pdfsummarizer.vercel.app`
+- **必须配置**：此变量在 `.env.local` 中未配置，需要在 Vercel 中添加此值
 
-**注意**：代码中也会使用 `SITE_URL`（不带 `NEXT_PUBLIC_` 前缀），如果设置了 `NEXT_PUBLIC_SITE_URL`，可以同时设置：
+#### 可选变量
 
-```bash
-SITE_URL="https://your-domain.vercel.app"  # 可选，用于服务器端
-```
-
-或者只设置 `NEXT_PUBLIC_SITE_URL`，代码会自动回退使用它。
-
----
-
-### 🟡 可选环境变量
-
-以下环境变量是可选的，根据需求配置：
-
-#### 清理任务配置
+**`CLEANUP_SECRET`** - 清理任务密钥（可选）
 
 ```bash
-CLEANUP_SECRET="your-secret-key"  # 用于保护清理 API 端点
+CLEANUP_SECRET="your-secret-key"
 ```
 
 **说明**：
-- 用于 `/api/admin/cleanup` 端点的身份验证
+- 用于保护 `/api/admin/cleanup` 端点
 - 生成方式：`openssl rand -base64 32`
 
----
+**`SITE_URL`** - 服务器端站点 URL（可选）
 
-#### Creem 支付配置（如果使用）
+```bash
+SITE_URL="https://pdftools.club"
+```
+
+**说明**：
+- 如果未设置，会使用 `NEXT_PUBLIC_SITE_URL`
+- 用于服务器端代码
+- **可选配置**：如果设置了 `NEXT_PUBLIC_SITE_URL`，此变量可以不设置
+
+**Creem 支付配置**（如果使用 Creem 作为支付提供商）
 
 ```bash
 CREEM_API_BASE="https://api.creem.com/v1"
@@ -230,19 +129,12 @@ CREEM_API_KEY="your-creem-api-key"
 CREEM_WEBHOOK_SECRET="your-webhook-secret"
 ```
 
-**说明**：
-- 如果使用 Creem 作为支付提供商，需要配置这些变量
-- 否则可以忽略
+### 配置步骤
 
----
-
-#### 站点元数据（SEO）
-
-```bash
-NEXT_PUBLIC_SITE_URL="https://your-domain.vercel.app"  # 已在必需变量中
-```
-
-这些信息也可以在代码中直接修改（`app/layout.tsx`）。
+1. 在 Vercel Dashboard → Settings → Environment Variables
+2. 添加所有已配置的变量（从本地 `.env.local` 文件复制）
+3. 添加必需变量 `NEXT_PUBLIC_SITE_URL="https://pdftools.club"`
+4. 根据需要添加可选变量
 
 ---
 
@@ -311,12 +203,12 @@ supabase db push
 
 **Site URL**:
 ```
-https://your-domain.vercel.app
+https://pdftools.club
 ```
 
 **Redirect URLs**:
 ```
-https://your-domain.vercel.app/auth/callback
+https://pdftools.club/auth/callback
 http://localhost:3000/auth/callback
 ```
 
@@ -338,7 +230,7 @@ http://localhost:3000/auth/callback
 在 Google Cloud Console 中，确保添加了以下回调 URL：
 
 ```
-https://your-domain.vercel.app/auth/callback
+https://pdftools.club/auth/callback
 http://localhost:3000/auth/callback
 ```
 
@@ -347,7 +239,7 @@ http://localhost:3000/auth/callback
 在 GitHub OAuth App 设置中，确保回调 URL 为：
 
 ```
-https://your-domain.vercel.app/auth/callback
+https://pdftools.club/auth/callback
 ```
 
 ---
@@ -502,28 +394,7 @@ pnpm db:migrate:deploy
 
 ## 环境变量清单
 
-### 快速检查清单
-
-在 Vercel Dashboard → Settings → Environment Variables 中，确保以下变量都已配置：
-
-#### 必需变量 ✅
-
-- [ ] `DATABASE_URL`
-- [ ] `NEXT_PUBLIC_SUPABASE_URL`
-- [ ] `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- [ ] `SUPABASE_SERVICE_ROLE_KEY`
-- [ ] `GOOGLE_CLIENT_ID`
-- [ ] `GOOGLE_CLIENT_SECRET`
-- [ ] `GITHUB_CLIENT_ID`
-- [ ] `GITHUB_CLIENT_SECRET`
-- [ ] `OPENROUTER_API_KEY`
-- [ ] `NEXT_PUBLIC_SITE_URL`
-
-#### 可选变量 ⚪
-
-- [ ] `CLEANUP_SECRET`
-- [ ] `CREEM_API_KEY`
-- [ ] `CREEM_WEBHOOK_SECRET`
+参考 `env.example` 文件获取完整的环境变量列表和配置说明。
 
 ---
 
