@@ -42,7 +42,7 @@
 
 - **Framework Preset**: Next.js
 - **Root Directory**: `./` (项目根目录)
-- **Build Command**: `pnpm build` (或 `npm run build`)
+- **Build Command**: `pnpm build` (会自动运行 `pnpm db:generate` 生成 Prisma Client)
 - **Output Directory**: `.next` (默认)
 - **Install Command**: `pnpm install` (或 `npm install`)
 
