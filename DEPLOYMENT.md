@@ -266,19 +266,24 @@ https://pdftools.club/auth/callback
 
 ## 其他配置
 
-### Vercel Cron Jobs
+### Vercel Cron Jobs（已禁用）
 
-项目已配置自动清理任务（每 6 小时运行一次）：
+~~定时任务功能已暂时禁用。~~
 
-```json
-{
-  "crons": [
-    {
-      "path": "/api/admin/cleanup",
-      "schedule": "0 */6 * * *"
-    }
-  ]
-}
+**注意**：如果需要启用自动清理功能，可以：
+1. 在 `vercel.json` 中添加 cron 配置
+2. 或使用外部服务（如 cron-job.org）定期调用 `/api/admin/cleanup` 端点
+
+**手动清理**：
+可以通过 POST 请求手动执行清理：
+```bash
+curl -X POST https://pdftools.club/api/admin/cleanup
+```
+
+**查看清理统计**：
+可以通过 GET 请求查看清理统计（不执行清理）：
+```bash
+curl https://pdftools.club/api/admin/cleanup
 ```
 
 确保在 Vercel Dashboard → Settings → Cron Jobs 中启用。
