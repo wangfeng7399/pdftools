@@ -18,18 +18,20 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           ...baseData,
           name: "PDF Summarizer",
           url: siteUrl,
-          logo: `${siteUrl}/logo.png`,
+          logo: `${siteUrl}/icon.svg`,
           description:
-            "AI-powered PDF analysis and summarization platform for professionals worldwide.",
+            "AI-powered PDF analysis and summarization platform for professionals worldwide. Summarize documents, chat with PDFs, merge, split, compress, and convert PDFs with ease.",
           contactPoint: {
             "@type": "ContactPoint",
             contactType: "Customer Service",
             email: "support@pdfsummarizer.com",
+            availableLanguage: ["English"],
           },
           sameAs: [
             // Add social media links when available
             // "https://twitter.com/pdfsummarizer",
             // "https://linkedin.com/company/pdfsummarizer",
+            // "https://facebook.com/pdfsummarizer",
           ],
         }
 
@@ -56,16 +58,31 @@ export function StructuredData({ type, data }: StructuredDataProps) {
           name: "PDF Summarizer",
           applicationCategory: "WebApplication",
           operatingSystem: "Web",
+          description:
+            "AI-powered PDF tools for summarizing, editing, merging, splitting, compressing, and converting PDF documents. Free and easy to use.",
           offers: {
             "@type": "Offer",
             price: "0",
             priceCurrency: "USD",
+            availability: "https://schema.org/InStock",
           },
           aggregateRating: {
             "@type": "AggregateRating",
             ratingValue: "4.8",
             ratingCount: "1250",
+            bestRating: "5",
+            worstRating: "1",
           },
+          featureList: [
+            "AI-powered PDF summarization",
+            "PDF merge and split",
+            "PDF compress and optimize",
+            "PDF rotate and crop",
+            "PDF to text conversion",
+            "Image to PDF conversion",
+            "Excel/CSV to PDF conversion",
+            "Chat with PDF documents",
+          ],
         }
 
       case "WebPage":
