@@ -24,6 +24,9 @@ export const metadata: Metadata = {
   },
 }
 
+// Force dynamic rendering to avoid build-time Supabase client issues
+export const dynamic = "force-dynamic"
+
 export default function PrivacyPage() {
   return (
     <div className="min-h-screen flex flex-col">
