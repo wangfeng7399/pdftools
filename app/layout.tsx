@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { SupabaseProvider } from "@/components/providers/supabase-provider"
 import { GoogleAnalytics } from "@/components/analytics/google-analytics"
+import { GoogleAdSense } from "@/components/analytics/google-adsense"
 import "./globals.css"
 
 const _geist = Geist({ subsets: ["latin"] })
@@ -126,6 +127,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans antialiased`}>
         <GoogleAnalytics />
+        <GoogleAdSense />
         <SupabaseProvider>
           {children}
         </SupabaseProvider>
