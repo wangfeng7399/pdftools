@@ -21,8 +21,8 @@
 
 1. **Vercel 账号**：注册 [Vercel](https://vercel.com)
 2. **GitHub/GitLab/Bitbucket 仓库**：将代码推送到 Git 仓库
-3. **Supabase 项目**：用于用户认证
-4. **PostgreSQL 数据库**：生产环境数据库（推荐使用 Vercel Postgres 或 Supabase）
+3. **Supabase 项目**：用于用户认证（OAuth 登录）
+4. **Vercel Postgres**：生产环境数据库（Vercel 提供）
 5. **OpenRouter API Key**：用于 AI 摘要生成
 
 ---
@@ -65,9 +65,12 @@
 
 以下变量在本地 `.env.local` 文件中已配置完成，部署到 Vercel 时直接从 `.env.local` 文件复制对应的值即可：
 
-- `DATABASE_URL` - Prisma Data Platform 数据库连接（已配置）
-- `POSTGRES_URL` - PostgreSQL 连接字符串（已配置）
-- `PRISMA_DATABASE_URL` - Prisma Accelerate 连接字符串（已配置）
+**数据库变量（如果使用 Vercel Postgres，这些变量会由 Vercel 自动设置，无需手动复制）**：
+- `DATABASE_URL` - Vercel Postgres 会自动设置
+- `POSTGRES_URL` - Vercel Postgres 会自动设置
+- `PRISMA_DATABASE_URL` - 如果使用 Prisma Accelerate，Vercel 会自动设置
+
+**其他已配置变量**：
 - `NEXT_PUBLIC_SUPABASE_URL` - Supabase 项目 URL（已配置）
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Supabase 匿名密钥（已配置）
 - `SUPABASE_SERVICE_ROLE_KEY` - Supabase 服务角色密钥（已配置）
@@ -79,7 +82,9 @@
 - `AUTH_SECRET` - 认证密钥（已配置）
 - `NEXTAUTH_URL` - NextAuth URL（已配置）
 
-**操作步骤**：在 Vercel Dashboard → Settings → Environment Variables 中，将上述变量名和对应的值从 `.env.local` 文件复制粘贴即可。**无需在此文档中重复说明，直接复制 `.env.local` 中的值。**
+**操作步骤**：
+1. **数据库变量**：如果使用 Vercel Postgres，在 Vercel Dashboard → Storage → Postgres 创建数据库后，Vercel 会自动设置 `DATABASE_URL`、`POSTGRES_URL` 等变量，无需手动配置。
+2. **其他变量**：在 Vercel Dashboard → Settings → Environment Variables 中，将其他变量名和对应的值从 `.env.local` 文件复制粘贴即可。
 
 ### ⚠️ 需要配置的变量
 
@@ -140,11 +145,32 @@ CREEM_WEBHOOK_SECRET="your-webhook-secret"
 
 ## 数据库配置
 
-### 生产环境数据库迁移
+### 使用 Vercel Postgres（推荐）
 
-部署到 Vercel 后，需要运行数据库迁移：
+本项目使用 **Vercel Postgres** 作为生产环境数据库。
 
-#### 方法 1：使用 Vercel CLI（推荐）
+#### 创建 Vercel Postgres 数据库
+
+1. 在 Vercel Dashboard → Storage → Create Database → Postgres
+2. 选择数据库区域和配置
+3. Vercel 会自动创建并设置 `DATABASE_URL` 环境变量
+4. 同时会创建 `POSTGRES_URL` 和 `PRISMA_DATABASE_URL`（如果使用 Prisma Accelerate）
+
+#### 数据库迁移
+
+**方法 1：自动迁移（推荐）**
+
+在 Vercel 项目设置中，更新 Build Command：
+
+```bash
+pnpm db:generate && pnpm prisma migrate deploy && pnpm build
+```
+
+这样每次部署时会自动运行数据库迁移。
+
+**方法 2：手动迁移**
+
+如果需要手动运行迁移：
 
 ```bash
 # 安装 Vercel CLI
@@ -156,42 +182,18 @@ vercel login
 # 链接项目
 vercel link
 
-# 运行迁移
+# 拉取环境变量
 vercel env pull .env.local
+
+# 运行迁移
 pnpm db:migrate:deploy
 ```
 
-#### 方法 2：使用 Vercel Postgres
+#### 注意事项
 
-如果使用 Vercel Postgres：
-
-1. 在 Vercel Dashboard → Storage → Postgres
-2. 创建数据库后，Vercel 会自动设置 `DATABASE_URL`
-3. 在 Vercel 项目设置中添加构建命令：
-
-```bash
-# Build Command
-pnpm build && pnpm prisma migrate deploy
-```
-
-#### 方法 3：使用 Supabase Postgres
-
-如果使用 Supabase Postgres：
-
-1. 在 Supabase Dashboard → SQL Editor
-2. 运行 Prisma 生成的 SQL 迁移文件
-3. 或使用 Supabase CLI：
-
-```bash
-# 安装 Supabase CLI
-npm i -g supabase
-
-# 链接项目
-supabase link --project-ref your-project-ref
-
-# 运行迁移
-supabase db push
-```
+- Vercel Postgres 会自动设置 `DATABASE_URL`，无需手动配置
+- 如果使用 Prisma Accelerate，Vercel 也会自动设置 `PRISMA_DATABASE_URL`
+- 确保在 Vercel Dashboard 中查看并确认数据库连接正常
 
 ---
 
@@ -372,9 +374,13 @@ pnpm build && pnpm prisma migrate deploy
 ### Q4: 数据库迁移失败
 
 **解决方案**：
-1. 确保 `DATABASE_URL` 指向正确的 PostgreSQL 数据库
-2. 确保数据库用户有创建表的权限
-3. 手动运行迁移：
+1. 确保在 Vercel Dashboard → Storage → Postgres 中已创建数据库
+2. 确保 `DATABASE_URL` 环境变量已自动设置（Vercel Postgres 会自动设置）
+3. 检查 Build Command 是否包含迁移步骤：
+   ```bash
+   pnpm db:generate && pnpm prisma migrate deploy && pnpm build
+   ```
+4. 手动运行迁移：
 
 ```bash
 vercel env pull .env.local

@@ -19,12 +19,19 @@ import Link from "next/link"
 export function UserMenu() {
   const { user, loading } = useSupabase()
   const router = useRouter()
-  const supabase = createClient()
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.push("/")
-    router.refresh()
+    try {
+      const supabase = createClient()
+      await supabase.auth.signOut()
+      router.push("/")
+      router.refresh()
+    } catch (error) {
+      console.error("Sign out error:", error)
+      // Still redirect even if sign out fails
+      router.push("/")
+      router.refresh()
+    }
   }
 
   if (loading) {
