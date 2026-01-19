@@ -95,7 +95,7 @@ export default function TermsPage() {
             <p>
               All uploaded files and generated summaries are automatically deleted after 24 hours. We do not
               permanently store your document content.
-            </h3>
+            </p>
             <h3>5.3 Prohibited Content</h3>
             <p>
               You may not upload content that contains viruses, malware, or any other harmful code. We reserve
